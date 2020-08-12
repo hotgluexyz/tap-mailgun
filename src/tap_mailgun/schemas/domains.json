@@ -1,0 +1,91 @@
+{
+	"type": "object",
+	"properties": {
+		"created_at": {
+			"type": [
+				"null",
+				"string"
+			],
+			"format": "date-time"
+		},
+		"id": {
+			"type": [
+				"null",
+				"string"
+			]
+		},
+		"is_disabled": {
+			"type": [
+				"null",
+				"boolean"
+			]
+		},
+		"name": {
+			"type": [
+				"null",
+				"string"
+			]
+		},
+		"require_tls": {
+			"type": [
+				"null",
+				"boolean"
+			]
+		},
+		"skip_verification": {
+			"type": [
+				"null",
+				"boolean"
+			]
+		},
+		"smtp_login": {
+			"type": [
+				"null",
+				"string"
+			]
+		},
+        "smtp_password": {
+			"type": [
+				"null",
+				"string"
+			]
+		},
+		"spam_action": {
+			"type": [
+				"null",
+				"string"
+			]
+		},
+		"state": {
+			"type": [
+				"null",
+				"string"
+			]
+		},
+		"type": {
+			"type": [
+				"null",
+				"string"
+			]
+		},
+		"web_prefix": {
+			"type": [
+				"null",
+				"string"
+			]
+		},
+		"web_scheme": {
+			"type": [
+				"null",
+				"string"
+			]
+		},
+		"wildcard": {
+			"type": [
+				"null",
+				"boolean"
+			]
+		}
+	},
+	"required": ["id", "name"]
+}

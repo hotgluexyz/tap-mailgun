@@ -1,0 +1,248 @@
+{
+	"type": "object",
+	"properties": {
+		"event": {
+			"type": "string"
+		},
+		"domain_id": {
+			"type": "string"
+		},
+		"timestamp": {
+			"type": "string",
+			"format": "date-time"
+		},
+		"id": {
+			"type": ["null", "string"]
+		},
+		"log-level": {
+			"type": ["null", "string"]
+		},
+		"method": {
+			"type": ["null", "string"]
+		},
+		"envelope": {
+			"type": ["null", "object"],
+			"properties": {
+				"targets": {
+					"type": ["null", "string"]
+				},
+				"transport": {
+					"type": ["null", "string"]
+				},
+				"sender": {
+					"type": ["null", "string"]
+				},
+				"sending-ip": {
+					"type": ["null", "string"]
+				}
+			}
+		},
+		"flags": {
+			"type": ["null", "object"],
+			"properties": {
+				"is-authenticated": {
+					"type": ["null", "boolean"]
+				},
+				"is-routed": {
+					"type": ["null", "boolean"]
+				},
+				"is-system-test": {
+					"type": ["null", "boolean"]
+				},
+				"is-test-mode": {
+					"type": ["null", "boolean"]
+				},
+				"is-delayed-bounce": {
+					"type": ["null", "boolean"]
+				}
+			}
+		},
+		"message": {
+			"type": ["null", "object"],
+			"properties": {
+				"headers": {
+					"type": ["null", "object"],
+					"properties": {
+						"to": {
+							"type": ["null", "string"]
+						},
+						"message-id": {
+							"type": ["null", "string"]
+						},
+						"from": {
+							"type": ["null", "string"]
+						},
+						"subject": {
+							"type": ["null", "string"]
+						}
+					}
+				},
+				"attachments": {
+					"type": ["null", "array"],
+					"items": {
+						"type": ["null", "string"]
+					}
+				},
+				"recipients": {
+					"type": ["null", "array"],
+					"items": {
+						"type": ["null", "string"]
+					}
+				},
+				"size": {
+					"type": ["null", "integer"]
+				}
+			}
+		},
+		"storage": {
+			"type": ["null", "object"],
+			"properties": {
+				"url": {
+					"type": ["null", "string"]
+				},
+				"key": {
+					"type": ["null", "string"]
+				}
+			}
+		},
+		"recipient": {
+			"type": ["null", "string"]
+		},
+		"recipient-domain": {
+			"type": ["null", "string"]
+		},
+		"campaigns": {
+			"type": ["null", "array"],
+			"items": {
+				"type": ["null", "string"]
+			}
+		},
+		"tags": {
+			"type": ["null", "array"],
+			"items": {
+				"type": ["null", "string"]
+			}
+		},
+		"user-variables": {
+			"type": ["null", "object"]
+		},
+		"routes": {
+			"type": ["null", "array"],
+			"items": {
+				"type": ["null", "object"],
+				"properties": {
+					"expression": {
+						"type": ["null", "string"]
+					},
+					"id": {
+						"type": ["null", "string"]
+					},
+					"match": {
+						"type": ["null", "object"],
+						"properties": {
+							"recipient": {
+								"type": ["null", "string"]
+							}
+						}
+					}
+				}
+			}
+		},
+		"delivery-status": {
+			"type": ["null", "object"],
+			"properties": {
+				"tls": {
+					"type": ["null", "boolean"]
+				},
+				"mx-host": {
+					"type": ["null", "string"]
+				},
+				"code": {
+					"type": [
+						"integer",
+						"string"
+					]
+				},
+				"description": {
+					"type": ["null", "string"]
+				},
+				"session-seconds": {
+					"type": ["null", "number"]
+				},
+				"utf8": {
+					"type": ["null", "boolean"]
+				},
+				"attempt-no": {
+					"type": ["null", "integer"]
+				},
+				"message": {
+					"type": ["null", "string"]
+				},
+				"certificate-verified": {
+					"type": ["null", "boolean"]
+				},
+				"retry-seconds": {
+					"type": ["null", "integer"]
+				}
+			}
+		},
+		"severity": {
+			"type": ["null", "string"]
+		},
+		"reason": {
+			"type": ["null", "string"]
+		},
+		"geolocation": {
+			"type": ["null", "object"],
+			"properties": {
+				"country": {
+					"type": ["null", "string"]
+				},
+				"region": {
+					"type": ["null", "string"]
+				},
+				"city": {
+					"type": ["null", "string"]
+				}
+			}
+		},
+		"ip": {
+			"type": ["null", "string"]
+		},
+		"client-info": {
+			"type": ["null", "object"],
+			"properties": {
+				"client-type": {
+					"type": ["null", "string"]
+				},
+				"client-os": {
+					"type": ["null", "string"]
+				},
+				"device-type": {
+					"type": ["null", "string"]
+				},
+				"client-name": {
+					"type": ["null", "string"]
+				},
+				"user-agent": {
+					"type": ["null", "string"]
+				}
+			}
+		},
+		"url": {
+			"type": ["null", "string"]
+		},
+		"reject": {
+			"type": ["null", "object"],
+			"properties": {
+				"reason": {
+					"type": ["null", "string"]
+				},
+				"description": {
+					"type": ["null", "string"]
+				}
+			}
+		}
+	},
+	"required": ["domain_id","event","id","timestamp"]
+}

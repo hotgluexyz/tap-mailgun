@@ -1,0 +1,65 @@
+{
+	"type": "object",
+	"properties": {
+		"storage_url": {
+			"type": "string"
+		},
+		"stripped-html": {
+			"type": ["null", "string"]
+		},
+		"stripped-signature": {
+			"type": ["null", "string"]
+		},
+		"from": {
+			"type": ["null", "string"]
+		},
+		"sender": {
+			"type": ["null", "string"]
+		},
+		"recipients": {
+			"type": ["null", "string"]
+		},
+		"body-plain": {
+			"type": ["null", "string"]
+		},
+		"attachments": {
+			"type": ["null", "array"],
+			"items": {
+				"type": ["null", "object"],
+				"properties": {
+					"url": {
+						"type": ["null", "string"]
+					},
+					"content-type": {
+						"type": ["null", "string"]
+					},
+					"name": {
+						"type": ["null", "string"]
+					},
+					"size": {
+						"type": ["null", "integer"]
+					}
+				}
+			}
+		},
+		"message-headers": {
+			"type": ["null", "array"],
+			"items": {
+				"type": ["null", "array"],
+				"items": {
+					"type": ["null", "string"]
+				}
+			}
+		},
+		"stripped-text": {
+			"type": ["null", "string"]
+		},
+		"subject": {
+			"type": ["null", "string"]
+		},
+		"body-html": {
+			"type": ["null", "string"]
+		}
+	},
+	"required": ["storage_url"]
+}

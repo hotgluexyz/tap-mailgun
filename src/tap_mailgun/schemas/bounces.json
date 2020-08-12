@@ -1,0 +1,22 @@
+{
+	"type": "object",
+	"properties": {
+		"address": {
+			"type": "string"
+		},
+		"created_at": {
+			"type": "string",
+			"format": "date-time"
+		},
+		"code": {
+			"type": ["null", "string"]
+		},
+		"domain_id": {
+			"type": "string"
+		},
+		"error": {
+			"type": ["null", "string"]
+		}
+	},
+	"required": ["address","created_at","domain_id"]
+}
