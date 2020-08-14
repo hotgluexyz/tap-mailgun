@@ -137,14 +137,16 @@ def _load_schemas():
     return schemas
 
 
-def _transform_and_write_record(row: Dict, schema: str, stream: str):
+def _transform_and_write_record(
+    row: Dict, schema: str, stream: str, time_extracted: dt.datetime
+):
     with singer.Transformer() as transformer:
         rec = transformer.transform(
             row,
             schema,
             metadata=metadata.to_map(Context.get_catalog_entry(stream)['metadata']),
         )
-    singer.write_record(stream, rec)
+    singer.write_record(stream, rec, time_extracted=time_extracted)
 
 
 def _validate_dependencies(selected_stream_ids: FrozenSet[str]) -> None:
@@ -187,14 +189,14 @@ def sync_domains() -> None:
     """
     stream = 'domains'
     schema = Context.get_schema(stream)
-
+    time_extracted = singer.utils.now()
     for domain in Context.mailgun_client.get_domains():
         # Domains will be needed in other syncs as other endpoints require the domain name
         Context.domains[domain['id']] = domain['name']
         domain['created_at'] = singer.utils.strptime_to_utc(
             domain['created_at']
         ).isoformat()
-        _transform_and_write_record(domain, schema, stream)
+        _transform_and_write_record(domain, schema, stream, time_extracted)
         Context.counts[stream] += 1
 
 
@@ -218,8 +220,8 @@ def sync_single_suppression(stream: str, address: str) -> None:
     suppression['created_at'] = singer.utils.strptime_to_utc(
         suppression['created_at']
     ).isoformat()
-
-    _transform_and_write_record(suppression, schema, stream)
+    time_extracted = singer.utils.now()
+    _transform_and_write_record(suppression, schema, stream, time_extracted)
     Context.counts[stream] += 1
 
 
@@ -242,7 +244,7 @@ def sync_all_suppressions(stream: str) -> None:
     for domain_id in Context.domains:
         Context.current_domain_id = domain_id
         Context.current_domain_name = Context.domains[domain_id]
-
+        time_extracted = singer.utils.now()
         for suppression in Context.mailgun_client.get_all_suppressions_of_type(
             domain_name=Context.current_domain_name, suppression_type=stream
         ):
@@ -250,7 +252,7 @@ def sync_all_suppressions(stream: str) -> None:
             suppression['created_at'] = singer.utils.strptime_to_utc(
                 suppression['created_at']
             ).isoformat()
-            _transform_and_write_record(suppression, schema, stream)
+            _transform_and_write_record(suppression, schema, stream, time_extracted)
             Context.counts[stream] += 1
 
 
@@ -284,7 +286,7 @@ def sync_events() -> None:
             )
             row['timestamp'] = row_timestamp.isoformat()
 
-            _transform_and_write_record(row, schema, stream)
+            _transform_and_write_record(row, schema, stream, time_extracted=to_datetime)
 
             # Check if sub-streams should be synced
             if Context.is_selected('messages'):
@@ -327,11 +329,11 @@ def sync_messages() -> None:
     if Context.messages:
         stream = 'messages'
         schema = Context.get_schema(stream)
-
+        time_extracted = singer.utils.now()
         for storage_url in Context.messages:
             message = Context.mailgun_client.get_message(storage_url=storage_url)
             message['storage_url'] = storage_url
-            _transform_and_write_record(message, schema, stream)
+            _transform_and_write_record(message, schema, stream, time_extracted)
             Context.counts[stream] += 1
 
 

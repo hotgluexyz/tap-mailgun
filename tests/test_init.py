@@ -180,7 +180,7 @@ def test_populate_metadata(mocker, mock_schema):
 
 def test_transform_and_write_record(capfd, mock_schema, mock_catalog, mock_context):
     """
-    Ensure that stdout from the _transform_and_write_record fuction is expected.
+    Ensure that stdout from the _transform_and_write_record function is expected.
     """
     stream = 'test_stream'
     record = {
@@ -192,12 +192,17 @@ def test_transform_and_write_record(capfd, mock_schema, mock_catalog, mock_conte
     }
     mock_context.catalog = mock_catalog
 
-    tap_mailgun._transform_and_write_record(record, mock_schema, stream)
+    tap_mailgun._transform_and_write_record(
+        record,
+        mock_schema,
+        stream,
+        time_extracted=dt.datetime(2019, 12, 31, 23, 0, tzinfo=dt.timezone.utc),
+    )
 
     expected_stdout = (
-        '{"type": "RECORD", "stream": "test_stream", "record": {"address": "test@email.com", '
-        '"created_at": "2020-07-29T14:27:29.000000Z", "code": "test_code", "domain_id": '
-        '"test_domain_id", "error": "test_error"}}\n'
+        '{"type": "RECORD", "stream": "test_stream", "record": {"address": "test@email.com", "created_at": '
+        '"2020-07-29T14:27:29.000000Z", "code": "test_code", "domain_id": "test_domain_id", "error": "test_error"}, '
+        '"time_extracted": "2019-12-31T23:00:00.000000Z"}\n'
     )
     actual_stdout = capfd.readouterr().out
 
