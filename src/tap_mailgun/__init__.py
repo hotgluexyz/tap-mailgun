@@ -216,13 +216,15 @@ def sync_single_suppression(stream: str, address: str) -> None:
         suppression_type=stream,
         address=address,
     )
-    suppression['domain_id'] = Context.current_domain_id
-    suppression['created_at'] = singer.utils.strptime_to_utc(
-        suppression['created_at']
-    ).isoformat()
-    time_extracted = singer.utils.now()
-    _transform_and_write_record(suppression, schema, stream, time_extracted)
-    Context.counts[stream] += 1
+
+    if suppression:
+        suppression['domain_id'] = Context.current_domain_id
+        suppression['created_at'] = singer.utils.strptime_to_utc(
+            suppression['created_at']
+        ).isoformat()
+        time_extracted = singer.utils.now()
+        _transform_and_write_record(suppression, schema, stream, time_extracted)
+        Context.counts[stream] += 1
 
 
 def sync_all_suppressions(stream: str) -> None:
