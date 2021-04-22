@@ -1,5 +1,7 @@
 black
+bleach==3.3.0
 check-manifest
+cryptography==3.2
 flake8
 flake8-bugbear
 flake8-comprehensions
@@ -8,11 +10,13 @@ isort
 pre-commit
 pkgutil-resolve-name ; python_version < '3.9'
 py==1.10.0
+pygments==2.7.4
 pytest
 pytest-cov
 pytest-mock
 pytest-randomly
 pytest-socket
+pyyaml==5.4
 requests-mock
 secretstorage # required for twine on linux
 twine
