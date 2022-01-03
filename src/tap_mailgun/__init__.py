@@ -8,8 +8,8 @@ from typing import Dict, FrozenSet, Optional
 import singer
 from singer import metadata
 
-from .client import MailgunClient, get_client
-from .const import DEFAULT_BASE_URL, DEPENDENCIES, KEY_PROPERTIES, REQUIRED_CONFIG_KEYS
+from tap_mailgun.client import MailgunClient, get_client
+from tap_mailgun.const import DEFAULT_BASE_URL, DEPENDENCIES, KEY_PROPERTIES, REQUIRED_CONFIG_KEYS
 
 logger = singer.get_logger()
 
@@ -200,6 +200,23 @@ def sync_domains() -> None:
         Context.counts[stream] += 1
 
 
+def sync_mailing_lists() -> None:
+    """
+    Mailing lists must be synced before members as it depends on the address.
+    """
+    stream = 'mailing_lists'
+    schema = Context.get_schema(stream)
+    time_extracted = singer.utils.now()
+    Context.mailing_lists = []
+    for mailing_list in Context.mailgun_client.get_mailing_lists():
+        Context.mailing_lists.append(mailing_list['address'])
+        mailing_list['created_at'] = singer.utils.strptime_to_utc(
+            mailing_list['created_at']
+        ).isoformat()
+        _transform_and_write_record(mailing_list, schema, stream, time_extracted)
+        Context.counts[stream] += 1
+
+
 def sync_single_suppression(stream: str, address: str) -> None:
     """
     Syncs a single suppression (bounce, unsubscribe, complaint).
@@ -225,6 +242,22 @@ def sync_single_suppression(stream: str, address: str) -> None:
         time_extracted = singer.utils.now()
         _transform_and_write_record(suppression, schema, stream, time_extracted)
         Context.counts[stream] += 1
+
+
+def sync_members(stream: str) -> None:
+    """
+    Syncs all membres from all mailing lists.
+    """
+    schema = Context.get_schema(stream)
+
+    for mailing_list in Context.mailing_lists:
+        time_extracted = singer.utils.now()
+        for member in Context.mailgun_client.get_all_members(
+            list_address=mailing_list
+        ):
+            member['mailing_list'] = mailing_list
+            _transform_and_write_record(member, schema, stream, time_extracted)
+            Context.counts[stream] += 1
 
 
 def sync_all_suppressions(stream: str) -> None:
@@ -390,6 +423,10 @@ def do_sync() -> None:
     # 'events' should run after 'sync_all_suppression' to catch potential changes that happened during full sync.
     # 'messages' depends on completed 'events' stream.
     sync_domains()
+    if Context.is_selected('mailing_lists'):
+        sync_mailing_lists()
+    if Context.is_selected('members'):
+        sync_members('members')
     if Context.is_selected('bounces'):
         sync_all_suppressions('bounces')
     if Context.is_selected('complaints'):

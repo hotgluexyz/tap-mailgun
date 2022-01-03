@@ -15,6 +15,8 @@ ENDPOINTS = {
     'complaints_single': '{domain_name}/complaints/{address}',
     'unsubscribes_full': '{domain_name}/unsubscribes',
     'unsubscribes_single': '{domain_name}/unsubscribes/{address}',
+    'mailing_lists': 'lists/pages',
+    'members': 'lists/{list_address}/members/pages'
 }
 
 logger = singer.get_logger()
@@ -32,6 +34,7 @@ class MailgunClient:
     - Suppressions (Bounces, Complaints, Unsubscribes)
     - Events
     - Messages
+    - Mailing Lists
     """
 
     def __init__(self, *, base_url: str, session: requests.Session, timeout: int = 10):
@@ -88,6 +91,20 @@ class MailgunClient:
         domains = self._do_authenticated_request(url, stream=entity)
         yield from domains['items']
 
+    def get_mailing_lists(self) -> Generator[Dict, None, None]:
+        entity = 'mailing_lists'
+        url = urljoin(self.base_url, ENDPOINTS[entity])
+        yield from self._auto_paginate(url=url, entity=entity)
+    
+    def get_all_members(
+        self, *, list_address: str
+    ) -> Generator[Dict, None, None]:
+        entity = 'members'
+        url = urljoin(self.base_url, ENDPOINTS['members']).format(
+            list_address=list_address
+        )
+        yield from self._auto_paginate(url=url, entity=entity)
+
     def get_all_suppressions_of_type(
         self, *, domain_name: str, suppression_type: str
     ) -> Generator[Dict, None, None]:
@@ -95,7 +112,6 @@ class MailgunClient:
         url = urljoin(self.base_url, ENDPOINTS[entity + '_full']).format(
             domain_name=domain_name
         )
-
         yield from self._auto_paginate(url=url, entity=entity)
 
     def get_events(

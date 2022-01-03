@@ -1,0 +1,45 @@
+{
+	"type": "object",
+	"properties": {
+		"created_at": {
+			"type": [
+				"null",
+				"string"
+			],
+			"format": "date-time"
+		},
+		"address": {
+			"type": [
+				"null",
+				"string"
+			]
+		},
+		"access_level": {
+			"type": [
+				"null",
+				"string"
+			]
+		},
+		"description": {
+			"type": [
+				"null",
+				"string"
+			]
+		},
+		"members_count": {
+			"type": [
+				"null",
+				"integer"
+			]
+		},
+		"name": {
+			"type": [
+				"null",
+				"string"
+			]
+		}
+	},
+	"required": [
+		"address"
+	]
+}
